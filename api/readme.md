@@ -12,7 +12,7 @@ Invoke the following endpoints to test the application. Make sure to change the 
 ### Recognize endpoint
 
 ```
-curl -X POST <endpoint-url>/recognize
+curl -X POST localh/recognize
 ```
 Response
 ```json
@@ -22,3 +22,11 @@ Response
 }
 ```
 
+
+## Local Development
+
+1. Build image
+`docker build -t choreo-deepface-api .`
+
+2. Run
+`docker run -p 8080:8080 choreo-deepface-api`

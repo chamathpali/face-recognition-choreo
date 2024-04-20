@@ -1,31 +1,30 @@
-# Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com/) All Rights Reserved.
+FROM python:3.10-slim
 
-# WSO2 LLC. licenses this file to you under the Apache License,
-# Version 2.0 (the "License"); you may not use this file except
-# in compliance with the License.
-# You may obtain a copy of the License at
+# Install curl and other dependencies
+RUN apt-get update && apt-get install -y curl gnupg
 
-# http://www.apache.org/licenses/LICENSE-2.0
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations
-# under the License.
+# Verify Node.js and NPM installation
+RUN node -v && npm -v
 
-FROM python:alpine
+WORKDIR /usr/src/app
 
-WORKDIR /python-docker
+COPY package*.json ./
 
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+RUN npm ci --omit=dev
+RUN npm rebuild @tensorflow/tfjs-node --build-from-source
+RUN npm rebuild @tensorflow/tfjs-node build-addon-from-source
 
 COPY . .
-RUN ls
+
+
+
 # Create a new user with UID 10016
-RUN addgroup -g 10016 choreo && \
-    adduser  --disabled-password  --no-create-home --uid 10016 --ingroup choreo choreouser
-USER 10016
-EXPOSE 5000
-CMD [ "flask", "run", "--host=0.0.0.0"]
+# RUN addgroup -g 10016 choreo && \
+#     adduser  --disabled-password  --no-create-home --uid 10016 --ingroup choreo choreouser
+# USER 10016
+
+CMD [ "node", "index.mjs" ]

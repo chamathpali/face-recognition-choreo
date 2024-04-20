@@ -22,7 +22,7 @@ endpoints:
 # +required Unique name for the endpoint. (This name will be used when generating the managed API)
   - name: Face Recognition
     # +required Numeric port value that gets exposed via this endpoint
-    port: 5000
+    port: 8080
     # +required Type of the traffic this endpoint is accepting. Example: REST, GraphQL, etc.
     # Allowed values: REST, GraphQL, GRPC
     type: REST
@@ -34,4 +34,4 @@ endpoints:
     schemaFilePath: openapi.yaml
 
     # represents context relevant to the service
-    context: /fr
+    context: /api
